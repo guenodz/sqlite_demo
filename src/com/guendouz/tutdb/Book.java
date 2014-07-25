@@ -18,71 +18,74 @@ package com.guendouz.tutdb;
 import java.sql.Date;
 
 public class Book {
-	private String BookId;
-	private String Title;
-	private String SubTitle;
-	private int Pages;
-	private Date Published;
+    private String BookId;
+    private String Title;
+    private String SubTitle;
+    private int Pages;
+    private Date Published;
+    private String Description;
 
-	public Book(String bookId, String title, String subTitle, int pages,
-			Date published, String description) {
-		super();
-		BookId = bookId;
-		Title = title;
-		SubTitle = subTitle;
-		Pages = pages;
-		Published = published;
-		Description = description;
-	}
+    public Book(String bookId,
+                String title,
+                String subTitle,
+                int pages,
+                Date published,
+                String description) {
 
-	public String getBookId() {
-		return BookId;
-	}
+        BookId = bookId;
+        Title = title;
+        SubTitle = subTitle;
+        Pages = pages;
+        Published = published;
+        Description = description;
+    }
 
-	public void setBookId(String bookId) {
-		BookId = bookId;
-	}
+    public String getBookId() {
+        return BookId;
+    }
 
-	public String getTitle() {
-		return Title;
-	}
+    public void setBookId(String bookId) {
+        BookId = bookId;
+    }
 
-	public void setTitle(String title) {
-		Title = title;
-	}
+    public String getTitle() {
+        return Title;
+    }
 
-	public String getSubTitle() {
-		return SubTitle;
-	}
+    public void setTitle(String title) {
+        Title = title;
+    }
 
-	public void setSubTitle(String subTitle) {
-		SubTitle = subTitle;
-	}
+    public String getSubTitle() {
+        return SubTitle;
+    }
 
-	public int getPages() {
-		return Pages;
-	}
+    public void setSubTitle(String subTitle) {
+        SubTitle = subTitle;
+    }
 
-	public void setPages(int pages) {
-		Pages = pages;
-	}
+    public int getPages() {
+        return Pages;
+    }
 
-	public Date getPublished() {
-		return Published;
-	}
+    public void setPages(int pages) {
+        Pages = pages;
+    }
 
-	public void setPublished(Date published) {
-		Published = published;
-	}
+    public Date getPublished() {
+        return Published;
+    }
 
-	public String getDescription() {
-		return Description;
-	}
+    public void setPublished(Date published) {
+        Published = published;
+    }
 
-	public void setDescription(String description) {
-		Description = description;
-	}
+    public String getDescription() {
+        return Description;
+    }
 
-	private String Description;
+    public void setDescription(String description) {
+        Description = description;
+    }
 
 }

@@ -1,1 +1,9 @@
+#Eclipse
 /bin/
+.classpath
+.project
+
+
+#IntelliJ Idea
+.idea/
+sqlite_demo.iml

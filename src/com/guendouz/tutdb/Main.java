@@ -16,22 +16,33 @@
 package com.guendouz.tutdb;
 
 import java.sql.Date;
+import java.sql.SQLException;
 
 public class Main {
 
-	public static void main(String[] args) {
-		Connexion connexion = new Connexion("data\\Database.db");
-		connexion.connect();
+    public static void main(String[] args) {
+        try {
 
-		Book book = new Book("9aa883e6-dfc0-4149-902a-4dbdfa22a408",
-				"Système D'Information", "", 450, Date.valueOf("2012-11-01"),
-				"");
-		System.out.println(book.getPublished());
-		connexion.addBook(book);
-		for (Book b : connexion.getAllBooks())
-			System.out.println(b.getTitle());
+            Connexion connexion = new Connexion("Data/Database.db");
+            connexion.connect();
 
-		connexion.close();
-	}
+            Book book = new Book("9aa883e6-dfc0-4149-902a-4dbdfa22a408",
+                    "SystÃ¨me D'Information", "", 450, Date.valueOf("2012-11-01"),
+                    "");
+
+            System.out.println(book.getPublished());
+
+            connexion.addBook(book);
+
+            for (Book b : connexion.getAllBooks())
+                System.out.println(b.getTitle());
+
+            connexion.close();
+
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
