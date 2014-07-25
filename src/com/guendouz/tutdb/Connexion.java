@@ -15,16 +15,25 @@
  */
 package com.guendouz.tutdb;
 
+import com.sun.istack.internal.NotNull;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.sql.*;
 import java.util.ArrayList;
 
 public class Connexion {
+    // Defaults to the path to the sample DB
     private String DBPath = "Data/Database.db";
     private Connection connection = null;
     private Statement statement = null;
 
-    public Connexion(String dBPath) {
-        DBPath = dBPath;
+    public Connexion(@NotNull String dBPath) throws FileNotFoundException {
+        // Check DB existence + read permissions
+        if (new File(dBPath).canRead())
+            DBPath = dBPath;
+        else
+            throw new FileNotFoundException("Err! DB Not found or Cannot be read.");
     }
 
     public void connect() throws SQLException, ClassNotFoundException {

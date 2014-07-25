@@ -15,6 +15,7 @@
  */
 package com.guendouz.tutdb;
 
+import java.io.FileNotFoundException;
 import java.sql.Date;
 import java.sql.SQLException;
 
@@ -23,7 +24,13 @@ public class Main {
     public static void main(String[] args) {
         try {
 
+            // Try to connect to DB
             Connexion connexion = new Connexion("Data/Database.db");
+
+            // What if the path was wrong or I can't read on the DB?
+//            Connexion connexion = new Connexion("Data/Database.d");
+
+
             connexion.connect();
 
             Book book = new Book("9aa883e6-dfc0-4149-902a-4dbdfa22a408",
@@ -34,15 +41,17 @@ public class Main {
 
             connexion.addBook(book);
 
-            for (Book b : connexion.getAllBooks())
-                System.out.println(b.getTitle());
+            connexion.getAllBooks()
+                    .forEach(b -> System.out.println(b.getTitle()));
 
             connexion.close();
 
 
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException | ClassNotFoundException | FileNotFoundException e) {
             e.printStackTrace();
         }
+
+        System.out.println("\nExecution DONE!");
     }
 
 }
