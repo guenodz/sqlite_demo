@@ -55,32 +55,38 @@ public class Connexion {
     public ArrayList<Book> getAllBooks() throws SQLException {
         ArrayList<Book> result = new ArrayList<>();
 
-        PreparedStatement preparedStatement = connection
-                .prepareStatement("SELECT * FROM Book");
+        ResultSet resultSet;
+        try (PreparedStatement preparedStatement = connection
+                .prepareStatement("SELECT * FROM Book")) {
 
-        ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
 
-        while (resultSet.next()) {
-            Book book = new Book(resultSet.getString(1),
-                    resultSet.getString(2), resultSet.getString(3),
-                    resultSet.getInt(4), resultSet.getDate(5),
-                    resultSet.getString(6));
-            result.add(book);
+            while (resultSet.next()) {
+                Book book = new Book(resultSet.getString(1),
+                        resultSet.getString(2), resultSet.getString(3),
+                        resultSet.getInt(4), resultSet.getDate(5),
+                        resultSet.getString(6));
+                result.add(book);
+            }
+
         }
         return result;
     }
 
     public void addBook(Book book) throws SQLException {
 
-        PreparedStatement preparedStatement = connection
-                .prepareStatement("INSERT INTO Book VALUES(?,?,?,?,?,?)");
-        preparedStatement.setString(1, book.getBookId());
-        preparedStatement.setString(2, book.getTitle());
-        preparedStatement.setString(3, book.getSubTitle());
-        preparedStatement.setInt(4, book.getPages());
-        preparedStatement.setDate(5, book.getPublished());
-        preparedStatement.setString(6, book.getDescription());
-        preparedStatement.executeUpdate();
+        try (PreparedStatement preparedStatement = connection
+                .prepareStatement("INSERT INTO Book VALUES(?,?,?,?,?,?)")) {
+
+            preparedStatement.setString(1, book.getBookId());
+            preparedStatement.setString(2, book.getTitle());
+            preparedStatement.setString(3, book.getSubTitle());
+            preparedStatement.setInt(4, book.getPages());
+            preparedStatement.setDate(5, book.getPublished());
+            preparedStatement.setString(6, book.getDescription());
+
+            preparedStatement.executeUpdate();
+        }
         System.out.println("Successfully inserted " + book.getTitle());
     }
 }

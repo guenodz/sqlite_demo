@@ -87,4 +87,12 @@ public class Book {
     public void setDescription(String description) {
         Description = description;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s [%s]\n%s",
+                Title,
+                Published,
+                Description);
+    }
 }
