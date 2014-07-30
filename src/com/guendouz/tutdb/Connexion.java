@@ -15,95 +15,78 @@
  */
 package com.guendouz.tutdb;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import com.sun.istack.internal.NotNull;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class Connexion {
-	private String DBPath = "data\\Database.db";
-	private Connection connection = null;
-	private Statement statement = null;
+    // Defaults to the path to the sample DB
+    private String DBPath = "Data/Database.db";
+    private Connection connection = null;
+    private Statement statement = null;
 
-	public Connexion(String dBPath) {
-		DBPath = dBPath;
-	}
+    public Connexion(@NotNull String dBPath) throws FileNotFoundException {
+        // Check DB existence + read permissions
+        if (new File(dBPath).canRead())
+            DBPath = dBPath;
+        else
+            throw new FileNotFoundException("Err! DB Not found or Cannot be read.");
+    }
 
-	public void connect() {
-		try {
-			Class.forName("org.sqlite.JDBC");
-			connection = DriverManager.getConnection("jdbc:sqlite:" + DBPath);
-			statement = connection.createStatement();
-			System.out.println("Connexion a " + DBPath + " avec succès");
-		} catch (ClassNotFoundException notFoundException) {
-			notFoundException.printStackTrace();
-			System.out.println("Erreur de connecxion");
-		} catch (SQLException sqlException) {
-			sqlException.printStackTrace();
-			System.out.println("Erreur de connecxion");
-		}
-	}
+    public void connect() throws SQLException, ClassNotFoundException {
+        Class.forName("org.sqlite.JDBC");
+        connection = DriverManager.getConnection("jdbc:sqlite:" + DBPath);
+        statement = connection.createStatement();
+        System.out.println("Successfully connected to " + DBPath);
+    }
 
-	public void close() {
-		try {
-			connection.close();
-			statement.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
+    public void close() throws SQLException {
+        statement.close();
+        connection.close();
+    }
 
-	public ResultSet query(String requet) {
-		ResultSet resultat = null;
-		try {
-			resultat = statement.executeQuery(requet);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("Erreur dans la requet : " + requet);
-		}
-		return resultat;
+    public ResultSet query(String requet) throws SQLException {
+        return statement.executeQuery(requet);
+    }
 
-	}
+    public ArrayList<Book> getAllBooks() throws SQLException {
+        ArrayList<Book> result = new ArrayList<>();
 
-	public ArrayList<Book> getAllBooks() {
-		ArrayList<Book> result = new ArrayList<>();
-		try {
-			PreparedStatement preparedStatement = connection
-					.prepareStatement("SELECT * FROM Book");
-			ResultSet resultSet = preparedStatement.executeQuery();
-			while (resultSet.next()) {
-				Book book = new Book(resultSet.getString(1),
-						resultSet.getString(2), resultSet.getString(3),
-						resultSet.getInt(4), resultSet.getDate(5),
-						resultSet.getString(6));
-				result.add(book);
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        ResultSet resultSet;
+        try (PreparedStatement preparedStatement = connection
+                .prepareStatement("SELECT * FROM Book")) {
 
-		return result;
-	}
+            resultSet = preparedStatement.executeQuery();
 
-	public void addBook(Book book) {
-		try {
-			PreparedStatement preparedStatement = connection
-					.prepareStatement("INSERT INTO Book VALUES(?,?,?,?,?,?)");
-			preparedStatement.setString(1, book.getBookId());
-			preparedStatement.setString(2, book.getTitle());
-			preparedStatement.setString(3, book.getSubTitle());
-			preparedStatement.setInt(4, book.getPages());
-			preparedStatement.setDate(5, book.getPublished());
-			preparedStatement.setString(6, book.getDescription());
-			preparedStatement.executeUpdate();
-			System.out.println("Insertion Avec Succées");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+            while (resultSet.next()) {
+                Book book = new Book(resultSet.getString(1),
+                        resultSet.getString(2), resultSet.getString(3),
+                        resultSet.getInt(4), resultSet.getDate(5),
+                        resultSet.getString(6));
+                result.add(book);
+            }
+
+        }
+        return result;
+    }
+
+    public void addBook(Book book) throws SQLException {
+
+        try (PreparedStatement preparedStatement = connection
+                .prepareStatement("INSERT INTO Book VALUES(?,?,?,?,?,?)")) {
+
+            preparedStatement.setString(1, book.getBookId());
+            preparedStatement.setString(2, book.getTitle());
+            preparedStatement.setString(3, book.getSubTitle());
+            preparedStatement.setInt(4, book.getPages());
+            preparedStatement.setDate(5, book.getPublished());
+            preparedStatement.setString(6, book.getDescription());
+
+            preparedStatement.executeUpdate();
+        }
+        System.out.println("Successfully inserted " + book.getTitle());
+    }
 }
