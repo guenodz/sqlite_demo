@@ -48,18 +48,18 @@ public class Connexion {
         connection.close();
     }
 
-    public ResultSet query(String requet) throws SQLException {
-        return statement.executeQuery(requet);
+    public ResultSet query(String request) throws SQLException {
+        return statement.executeQuery(request);
     }
 
     public ArrayList<Book> getAllBooks() throws SQLException {
         ArrayList<Book> result = new ArrayList<>();
 
-        ResultSet resultSet;
-        try (PreparedStatement preparedStatement = connection
-                .prepareStatement("SELECT * FROM Book")) {
-
-            resultSet = preparedStatement.executeQuery();
+        try (
+                PreparedStatement preparedStatement = connection
+                        .prepareStatement("SELECT * FROM Book");
+                ResultSet resultSet = preparedStatement.executeQuery()
+        ) {
 
             while (resultSet.next()) {
                 Book book = new Book(resultSet.getString(1),

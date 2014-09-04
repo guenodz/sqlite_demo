@@ -25,6 +25,7 @@ public class Book {
     private Date Published;
     private String Description;
 
+    @SuppressWarnings("ConstructorWithTooManyParameters")
     public Book(String bookId,
                 String title,
                 String subTitle,
@@ -90,9 +91,10 @@ public class Book {
 
     @Override
     public String toString() {
-        return String.format("%s [%s]\n%s",
+        //noinspection UnnecessaryParentheses
+        return String.format("%s [%s]\n%s\n",
                 Title,
                 Published,
-                Description);
+                (Description != null) ? (Description.substring(0, Description.length() / 10) + "...") : "");
     }
 }
