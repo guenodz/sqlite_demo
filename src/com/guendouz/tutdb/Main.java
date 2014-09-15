@@ -42,7 +42,8 @@ public class Main {
             connexion.addBook(book);
 
             connexion.getAllBooks()
-                    .forEach(b -> System.out.println(b.getTitle()));
+//                    .forEach(b -> System.out.println(b.getTitle()));
+                    .forEach(System.out::println);
 
             connexion.close();
 
